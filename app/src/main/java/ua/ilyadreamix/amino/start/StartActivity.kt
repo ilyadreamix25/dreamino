@@ -11,6 +11,9 @@ import ua.ilyadreamix.amino.session.SessionUtility
 
 @AndroidEntryPoint
 class StartActivity : ComponentActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

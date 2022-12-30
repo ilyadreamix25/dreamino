@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dreamino</string>
+    <string name="login_to_the_account">Login to the account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="dreamino_by">IlyaDreamix 2022\nVersion %1$s</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

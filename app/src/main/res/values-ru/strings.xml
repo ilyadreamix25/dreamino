@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dreamino</string>
+    <string name="login_to_the_account">Войти в аккаунт</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="dreamino_by">IlyaDreamix 2022\Версия %1$s</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+</resources>
