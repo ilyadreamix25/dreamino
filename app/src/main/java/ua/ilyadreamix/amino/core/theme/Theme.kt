@@ -30,7 +30,7 @@ fun AminoTheme(content: @Composable () -> Unit) {
     val view = LocalView.current
 
     // Dynamic colors are available
-    // when SDK >= 31 (Android 12)
+    // if SDK >= 31 (Android 12)
     val applyDynamicColors = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
     val setDarkTheme = isSystemInDarkTheme()
 
@@ -51,10 +51,11 @@ fun AminoTheme(content: @Composable () -> Unit) {
 
             WindowCompat.setDecorFitsSystemWindows(window, false)
 
-            WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightNavigationBars = !setDarkTheme
-                isAppearanceLightStatusBars = !setDarkTheme
-            }
+            WindowCompat.getInsetsController(window, view)
+                .apply {
+                    isAppearanceLightNavigationBars = !setDarkTheme
+                    isAppearanceLightStatusBars = !setDarkTheme
+                }
         }
     }
 
