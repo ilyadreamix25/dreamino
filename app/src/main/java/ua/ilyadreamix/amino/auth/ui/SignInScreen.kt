@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,7 +41,6 @@ private val deviceId = OldAminoHashUtility.generateDeviceId()
 
 @Composable
 fun SignInScreen() {
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -119,6 +119,10 @@ fun SignInScreen() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val isButtonDisabled =
+                    authViewModel.signInResponseState.value.isLoading ||
+                    authViewModel.securityResponseState.value.isLoading
+
                 Button(
                     onClick = {
                         authViewModel.signIn(
@@ -135,13 +139,31 @@ fun SignInScreen() {
                         .padding(bottom = 16.dp)
                         .height(58.dp),
                     shape = RoundedCornerShape(16.dp),
+                    enabled = !isButtonDisabled
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.login)
-                    )
+                    Crossfade(
+                        targetState = isButtonDisabled,
+                        modifier = Modifier
+                            .height(58.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            if (it) CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                            else Text(
+                                text = stringResource(id = R.string.login),
+                                modifier = Modifier.align(Alignment.Center),
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
                 }
                 Text(
-                    text = stringResource(id = R.string.dreamino_by, BuildConfig.VERSION_NAME),
+                    text = stringResource(
+                        id = R.string.dreamino_by,
+                        BuildConfig.VERSION_NAME
+                    ),
                     modifier = Modifier.alpha(.5f),
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
@@ -160,7 +182,6 @@ private fun ObserveAuthViewModel(authViewModel: AuthViewModel) {
 
 @Composable
 private fun ObserveSignInResponse(authViewModel: AuthViewModel) {
-
     val signInResponse = authViewModel.signInResponseState.value
     val context = LocalContext.current
 
@@ -215,7 +236,6 @@ private fun ObserveSignInResponse(authViewModel: AuthViewModel) {
 
 @Composable
 private fun ObserveSecurityResponse(authViewModel: AuthViewModel) {
-
     val context = LocalContext.current
     val securityResponse = authViewModel.securityResponseState.value
 

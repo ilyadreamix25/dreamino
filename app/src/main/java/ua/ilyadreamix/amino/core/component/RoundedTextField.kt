@@ -18,7 +18,6 @@ fun RoundedTextField(
     onChange: (String) -> Unit = {},
     enabled: Boolean = true
 ) {
-
     var textInput by remember { mutableStateOf(text) }
 
     TextField(
