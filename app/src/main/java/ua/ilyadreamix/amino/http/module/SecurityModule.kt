@@ -4,11 +4,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ua.ilyadreamix.amino.http.repository.AuthRepository
+import ua.ilyadreamix.amino.http.repository.SecurityRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AuthModule {
+object SecurityModule {
     @Provides
-    fun provideService() = ApiModule.provideService(AuthRepository::class.java)
+    fun provideService() = ApiModule.provideService(SecurityRepository::class.java)
 }

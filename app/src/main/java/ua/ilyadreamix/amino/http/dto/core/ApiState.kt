@@ -6,5 +6,6 @@ data class ApiState<T>(
     val hasError: Boolean = false,
     val errorMessage: String? = null,
     val code: Int = -1,
-    val errorBody: BaseResponse? = null
+    val errorBody: BaseResponse? = null,
+    val extras: List<Any?>? = null
 )

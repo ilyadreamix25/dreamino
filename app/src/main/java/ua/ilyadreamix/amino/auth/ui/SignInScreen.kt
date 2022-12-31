@@ -1,7 +1,9 @@
-package ua.ilyadreamix.amino.signin.ui
+package ua.ilyadreamix.amino.auth.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,54 +21,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ua.ilyadreamix.amino.AminoApplication
 import ua.ilyadreamix.amino.BuildConfig
 import ua.ilyadreamix.amino.core.component.AminoLogo
 import ua.ilyadreamix.amino.R
+import ua.ilyadreamix.amino.auth.AuthViewModel
 import ua.ilyadreamix.amino.core.component.AminoAlertDialog
 import ua.ilyadreamix.amino.core.component.RoundedTextField
+import ua.ilyadreamix.amino.home.HomeActivity
+import ua.ilyadreamix.amino.http.dto.auth.SendPublicCertificatesRequest
 import ua.ilyadreamix.amino.http.dto.auth.SignInRequest
+import ua.ilyadreamix.amino.http.hash.KeyStoreUtility
 import ua.ilyadreamix.amino.http.utility.OldAminoHashUtility
-import ua.ilyadreamix.amino.signin.SignInViewModel
+import ua.ilyadreamix.amino.session.SessionInfo
+import ua.ilyadreamix.amino.session.SessionUtility
+
+private val deviceId = OldAminoHashUtility.generateDeviceId()
 
 @Composable
 fun SignInScreen() {
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val signInViewModel = viewModel<SignInViewModel>()
-    val response = signInViewModel.signInResponseState.value
+    val authViewModel = viewModel<AuthViewModel>()
 
-    if (response.hasError) {
-        val context = LocalContext.current
-        AminoAlertDialog(
-            onDismiss = {
-                signInViewModel.clear()
-            },
-            onConfirm = if (response.code == 270) {
-                {
-                    response.errorBody?.let {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.url))
-                        context.startActivity(intent)
-                    }
-                }
-            } else {
-                {
-                    signInViewModel.clear()
-                }
-            },
-            text = {
-                Text(text = response.errorMessage!!)
-            },
-            okButtonText = {
-                Text(text = stringResource(id = R.string.ok))
-            },
-            dismissButtonText = {
-                Text(text = stringResource(id = R.string.cancel))
-            }
-        )
-    } else if (!response.isLoading && response.code == 0) {
-        // TODO: Save session and go to the HomeActivity
-    }
+    // Error alert dialog, sending certificates
+    ObserveAuthViewModel(authViewModel)
 
     Surface(
         modifier = Modifier
@@ -140,8 +121,7 @@ fun SignInScreen() {
             ) {
                 Button(
                     onClick = {
-                        val deviceId = OldAminoHashUtility.generateDeviceId()
-                        signInViewModel.signIn(
+                        authViewModel.signIn(
                             body = SignInRequest(
                                 email = email,
                                 secret = "0 $password",
@@ -169,5 +149,91 @@ fun SignInScreen() {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ObserveAuthViewModel(authViewModel: AuthViewModel) {
+    ObserveSignInResponse(authViewModel)
+    ObserveSecurityResponse(authViewModel)
+}
+
+@Composable
+private fun ObserveSignInResponse(authViewModel: AuthViewModel) {
+
+    val signInResponse = authViewModel.signInResponseState.value
+    val context = LocalContext.current
+
+    if (signInResponse.hasError) {
+        AminoAlertDialog(
+            onDismiss = {
+                authViewModel.clearSignIn()
+            },
+            onConfirm = if (signInResponse.code == 270) {
+                {
+                    signInResponse.errorBody?.let {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.url))
+                        context.startActivity(intent)
+                    }
+                }
+            } else {
+                { authViewModel.clearSignIn() }
+            },
+            text = {
+                Text(text = signInResponse.errorMessage!!)
+            },
+            okButtonText = {
+                Text(text = stringResource(id = R.string.ok))
+            },
+            dismissButtonText = {
+                Text(text = stringResource(id = R.string.cancel))
+            }
+        )
+    } else if (!signInResponse.isLoading && signInResponse.code == 0) {
+        SessionUtility.saveSession(
+            SessionInfo(
+                lastLogin = System.currentTimeMillis(),
+                secret = signInResponse.data!!.secret,
+                sessionId = signInResponse.data.sid,
+                deviceId = deviceId,
+                userId = signInResponse.data.userProfile.uid
+            )
+        )
+
+        authViewModel.sendPublicCertificates(
+            SendPublicCertificatesRequest(
+                certificates = KeyStoreUtility(
+                    AminoApplication.getCertificateName()
+                ).initKeyPair().getCertificates(),
+                uid = signInResponse.data.userProfile.uid
+            )
+        )
+
+        authViewModel.clearSignIn()
+    }
+}
+
+@Composable
+private fun ObserveSecurityResponse(authViewModel: AuthViewModel) {
+
+    val context = LocalContext.current
+    val securityResponse = authViewModel.securityResponseState.value
+
+    if (securityResponse.hasError) {
+        val message = securityResponse.errorMessage
+        val code = securityResponse.code
+
+        Log.d(
+            "SignInScreen",
+            "Public certificates error: $message ($code)"
+        )
+
+        authViewModel.clearSecurity()
+    } else if (!securityResponse.isLoading && securityResponse.code == 0) {
+        val intent = Intent(context, HomeActivity::class.java)
+        context.startActivity(intent)
+        (context as Activity).finish()
+
+        authViewModel.clearSecurity()
     }
 }

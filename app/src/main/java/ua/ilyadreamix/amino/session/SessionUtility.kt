@@ -1,28 +1,42 @@
 package ua.ilyadreamix.amino.session
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.Gson
 
-class SessionUtility(context: Context) {
+object SessionUtility {
+
+    private lateinit var sharedPreferences: SharedPreferences
     private val gson = Gson()
-    private val sharedPreferences =
-        context.getSharedPreferences(
+
+    fun initContext(context: Context): SessionUtility {
+        sharedPreferences = context.getSharedPreferences(
             SharedPreferencesKeys.NAME,
             Context.MODE_PRIVATE
         )
+        return this
+    }
 
     fun getStatus(): Int {
+
         val session = getSessionInfo()
 
         return if (session == null)
             SessionStatus.NOT_AUTHORIZED
-        else if (checkNotRelogin(session))
+        else if (needRelogin(session))
             SessionStatus.EXPIRED
         else
             SessionStatus.ACTIVE
     }
 
-    private fun getSessionInfo(): SessionInfo? {
+    fun saveSession(session: SessionInfo) = sharedPreferences.edit()
+        .putString(
+            SharedPreferencesKeys.SESSION,
+            gson.toJson(session, SessionInfo::class.java)
+        )
+        .apply()
+
+    fun getSessionInfo(): SessionInfo? {
         val sessionJson = sharedPreferences.getString(
             SharedPreferencesKeys.SESSION,
             null
@@ -31,6 +45,6 @@ class SessionUtility(context: Context) {
         return gson.fromJson(sessionJson, SessionInfo::class.java)
     }
 
-    private fun checkNotRelogin(session: SessionInfo) =
-        session.lastLogin + (24 * 3600 * 1000) >= System.currentTimeMillis()
+    private fun needRelogin(session: SessionInfo) =
+        System.currentTimeMillis() > session.lastLogin + (24 * 60 * 60 * 1000)
 }

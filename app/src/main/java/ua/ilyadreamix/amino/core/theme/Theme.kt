@@ -26,6 +26,7 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun AminoTheme(content: @Composable () -> Unit) {
+
     val context = LocalContext.current
     val view = LocalView.current
 
@@ -43,6 +44,7 @@ fun AminoTheme(content: @Composable () -> Unit) {
 
     if (!view.isInEditMode) {
         SideEffect {
+
             val window = (context as Activity).window
                 .apply {
                     statusBarColor = Color.Transparent.toArgb()

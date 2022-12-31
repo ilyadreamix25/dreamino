@@ -11,7 +11,7 @@ import java.security.cert.Certificate
 import javax.security.auth.x500.X500Principal
 
 class KeyStoreUtility(private val name: String = "auth-keys-uid") {
-    fun initKeyPair() {
+    fun initKeyPair(): KeyStoreUtility {
         val start = GregorianCalendar()
         val end = GregorianCalendar()
             .apply {
@@ -35,6 +35,8 @@ class KeyStoreUtility(private val name: String = "auth-keys-uid") {
                 initialize(keyGenBuilder.build())
                 genKeyPair()
             }
+
+        return this
     }
 
     fun getKey(key: String? = name, password: String? = null) =

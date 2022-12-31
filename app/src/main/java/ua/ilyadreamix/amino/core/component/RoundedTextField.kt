@@ -1,7 +1,6 @@
 package ua.ilyadreamix.amino.core.component
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,6 +18,7 @@ fun RoundedTextField(
     onChange: (String) -> Unit = {},
     enabled: Boolean = true
 ) {
+
     var textInput by remember { mutableStateOf(text) }
 
     TextField(
@@ -27,7 +27,7 @@ fun RoundedTextField(
             textInput = it
             onChange(it)
         },
-        modifier = modifier.height(58.dp),
+        modifier = modifier.defaultMinSize(minHeight = 58.dp),
         shape = RoundedCornerShape(16.dp),
         colors = TextFieldDefaults.textFieldColors(
             unfocusedIndicatorColor = Color.Transparent,
