@@ -18,19 +18,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import ua.ilyadreamix.amino.ui.core.theme.AminoTheme
 
 @Composable
-fun RowScope.CommunityCard(
+fun CommunityCard(
     iconUrl: String,
     coverUrl: String,
     name: String,
@@ -55,11 +51,8 @@ fun RowScope.CommunityCard(
         modifier =
             if (doShimmer) modifier
                 .height(180.dp)
-                .weight(3f)
                 .shimmer(shimmerInstance)
-            else modifier
-                .height(180.dp)
-                .weight(3f)
+            else modifier.height(180.dp)
     ) {
         Card(
             shape = RoundedCornerShape(10.dp),
@@ -133,29 +126,5 @@ fun RowScope.CommunityCard(
                 loadingIcon = false
             }
         )
-    }
-}
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFF000000
-)
-@Composable
-fun CommunityCardPreview() {
-    val previewIconUrl =
-        "https://cm1.narvii.com/" +
-        "6656/ba7077272551c7ba216c3006222b83836ce3170c_120.jpg"
-    val previewCoverUrl =
-        "https://cm1.narvii.com/" +
-        "7199/891fcfc315922dd1cf35ef9b52513d37d0ca15bd_188.jpg"
-    val previewName = "Sport Amino EN"
-
-    AminoTheme {
-        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-            val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.View)
-            repeat(3) {
-                CommunityCard(previewIconUrl, previewCoverUrl, previewName, shimmerInstance)
-            }
-        }
     }
 }

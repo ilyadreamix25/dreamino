@@ -1,8 +1,9 @@
-package ua.ilyadreamix.amino.http.hash
+package ua.ilyadreamix.amino.utility.keystore
 
 import android.icu.util.GregorianCalendar
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.Log
 import org.apache.commons.codec.binary.Base64
 import java.security.KeyPairGenerator
 import java.security.KeyStore
@@ -12,6 +13,8 @@ import javax.security.auth.x500.X500Principal
 
 class KeyStoreUtility(private val name: String = "auth-keys-uid") {
     fun initKeyPair(): KeyStoreUtility {
+        Log.d("KeyStoreUtility", "initKeyPair: Name: $name")
+
         val start = GregorianCalendar()
         val end = GregorianCalendar()
             .apply {
@@ -44,10 +47,11 @@ class KeyStoreUtility(private val name: String = "auth-keys-uid") {
             .apply { load(null, null) }
             .getKey(key, password?.toCharArray()) as PrivateKey
 
-    fun getCertificates() =
-        getCertificateChain()
+    fun getChain(): List<String> {
+        Log.d("KeyStoreUtility", "getChain: Name: $name")
+        return getCertificateChain()
             .map {
-                val b64Certificate = Base64.encodeBase64String(it.encoded)
+                val b64Certificate = String(Base64.encodeBase64(it.encoded))
                 val indentedCertificate = b64Certificate.replace(
                     "(.{64})".toRegex(),
                     "$1\n"
@@ -57,6 +61,7 @@ class KeyStoreUtility(private val name: String = "auth-keys-uid") {
                 indentedCertificate +
                 "\n-----END CERTIFICATE-----"
             }
+    }
 
     private fun getCertificateChain(): Array<out Certificate> =
         KeyStore.getInstance("AndroidKeyStore")

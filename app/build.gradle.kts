@@ -15,7 +15,7 @@ android {
         minSdk    = 24
         targetSdk = 33
         versionCode = 3
-        versionName = "0.0.02"
+        versionName = "0.0.03"
         applicationId = "ua.ilyadreamix.amino"
 
         vectorDrawables {
@@ -73,10 +73,7 @@ val shimmerVersion: String by rootProject.extra
 val coreKtxVersion: String by rootProject.extra
 val lifecycleRuntimeKtxVersion: String by rootProject.extra
 
-val gsonVersion: String by rootProject.extra
-val retrofitVersion: String by rootProject.extra
 val coilVersion: String by rootProject.extra
-
 val ktorVersion: String by rootProject.extra
 val serializationVersion: String by rootProject.extra
 
@@ -104,12 +101,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$composeNavVersion")
 
     // HTTP
-    implementation("com.google.code.gson:gson:$gsonVersion")
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
-
-    // New HTTP
     implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
     implementation("io.ktor:ktor-client-android")
     implementation("io.ktor:ktor-client-serialization-jvm")

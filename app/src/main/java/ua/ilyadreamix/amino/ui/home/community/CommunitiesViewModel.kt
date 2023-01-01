@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import ua.ilyadreamix.amino.data.dto.communities.JoinedCommunitiesResponse
 import ua.ilyadreamix.amino.data.dto.core.ApiState
 import ua.ilyadreamix.amino.data.dto.core.BaseResponse
-import ua.ilyadreamix.amino.data.repo.communities.CommunitiesRepository
+import ua.ilyadreamix.amino.data.repo.CommunitiesRepository
 
 class CommunitiesViewModel : ViewModel() {
     private var _joinedState = mutableStateOf(ApiState<JoinedCommunitiesResponse>())
@@ -30,12 +30,12 @@ class CommunitiesViewModel : ViewModel() {
                         code = body.statusCode
                     )
                 } else {
-                    val body: BaseResponse = response.body()
+                    val responseBody: BaseResponse = response.body()
                     _joinedState.value = ApiState(
-                        errorBody = body,
-                        code = body.statusCode,
+                        errorBody = responseBody,
+                        code = responseBody.statusCode,
                         hasError = true,
-                        errorMessage = body.message
+                        errorMessage = responseBody.message
                     )
                 }
             } catch (e: Exception) {

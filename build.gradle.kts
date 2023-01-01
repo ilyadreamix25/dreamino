@@ -13,10 +13,7 @@ buildscript {
         set("lifecycleRuntimeKtxVersion", "2.5.1")
 
         // HTTP and JSON
-        set("gsonVersion", "2.10")
-        set("retrofitVersion", "2.9.0")
         set("coilVersion", "2.2.2")
-
         set("ktorVersion", "2.2.1")
         set("serializationVersion", "1.4.1")
 

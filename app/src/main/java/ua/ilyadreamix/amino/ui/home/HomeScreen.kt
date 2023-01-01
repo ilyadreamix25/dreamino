@@ -1,4 +1,5 @@
-package ua.ilyadreamix.amino.ui.home.ui
+
+package ua.ilyadreamix.amino.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ua.ilyadreamix.amino.ui.home.HomeTopBar
 import ua.ilyadreamix.amino.ui.home.navigation.HomeBottomAppBar
 import ua.ilyadreamix.amino.ui.home.navigation.HomeNavigationHost
 import ua.ilyadreamix.amino.ui.home.navigation.HomeNavigationScreen

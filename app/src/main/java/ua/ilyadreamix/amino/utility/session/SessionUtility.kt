@@ -2,12 +2,13 @@ package ua.ilyadreamix.amino.utility.session
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.google.gson.Gson
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 object SessionUtility {
-
     private lateinit var sharedPreferences: SharedPreferences
-    private val gson = Gson()
+    private val json = Json { ignoreUnknownKeys = true }
 
     fun initContext(context: Context): SessionUtility {
         sharedPreferences = context.getSharedPreferences(
@@ -17,10 +18,8 @@ object SessionUtility {
         return this
     }
 
-    fun getStatus(): Int {
-
+    fun getStatus(): SessionStatus {
         val session = getSessionInfo()
-
         return if (session == null)
             SessionStatus.NOT_AUTHORIZED
         else if (needRelogin(session))
@@ -32,7 +31,7 @@ object SessionUtility {
     fun saveSession(session: SessionInfo) = sharedPreferences.edit()
         .putString(
             SharedPreferencesKeys.SESSION,
-            gson.toJson(session, SessionInfo::class.java)
+            json.encodeToString(session)
         )
         .apply()
 
@@ -42,8 +41,12 @@ object SessionUtility {
             null
         ) ?: return null
 
-        return gson.fromJson(sessionJson, SessionInfo::class.java)
+        return json.decodeFromString(sessionJson)
     }
+
+    fun deleteSession() = sharedPreferences.edit()
+        .clear()
+        .apply()
 
     private fun needRelogin(session: SessionInfo) =
         System.currentTimeMillis() > session.lastLogin + (24 * 60 * 60 * 1000)

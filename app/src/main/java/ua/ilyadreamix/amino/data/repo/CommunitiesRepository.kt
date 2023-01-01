@@ -1,4 +1,4 @@
-package ua.ilyadreamix.amino.data.repo.communities
+package ua.ilyadreamix.amino.data.repo
 
 import io.ktor.client.request.*
 import io.ktor.client.statement.*

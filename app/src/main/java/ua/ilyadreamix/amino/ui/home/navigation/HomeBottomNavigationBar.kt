@@ -1,12 +1,10 @@
 package ua.ilyadreamix.amino.ui.home.navigation
 
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,9 +24,7 @@ fun HomeBottomAppBar(
         .find { it.route == currentDestination?.route }
         ?: HomeNavigationScreen.Communities
 
-    BottomAppBar(
-        modifier = modifier.height(100.dp)
-    ) {
+    BottomAppBar(modifier = modifier) {
         HomeNavigationScreen.asList().forEach { screen ->
 
             val selected =

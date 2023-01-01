@@ -16,8 +16,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,13 +28,13 @@ import ua.ilyadreamix.amino.AminoApplication
 import ua.ilyadreamix.amino.BuildConfig
 import ua.ilyadreamix.amino.ui.core.component.AminoLogo
 import ua.ilyadreamix.amino.R
+import ua.ilyadreamix.amino.data.dto.auth.LoginByEmailRequest
+import ua.ilyadreamix.amino.data.dto.security.SendPublicKeyRequest
 import ua.ilyadreamix.amino.ui.core.component.AminoAlertDialog
 import ua.ilyadreamix.amino.ui.core.component.AminoRoundedTextField
 import ua.ilyadreamix.amino.ui.home.HomeActivity
-import ua.ilyadreamix.amino.http.dto.auth.SendPublicCertificatesRequest
-import ua.ilyadreamix.amino.http.dto.auth.SignInRequest
-import ua.ilyadreamix.amino.http.hash.KeyStoreUtility
-import ua.ilyadreamix.amino.http.utility.OldAminoHashUtility
+import ua.ilyadreamix.amino.utility.keystore.KeyStoreUtility
+import ua.ilyadreamix.amino.data.utility.OldAminoHashUtility
 import ua.ilyadreamix.amino.utility.session.SessionInfo
 import ua.ilyadreamix.amino.utility.session.SessionUtility
 
@@ -120,13 +122,13 @@ fun SignInScreen() {
             ) {
 
                 val isButtonDisabled =
-                    signInViewModel.signInResponseState.value.isLoading ||
-                    signInViewModel.securityResponseState.value.isLoading
+                    signInViewModel.loginState.value.isLoading ||
+                    signInViewModel.publicKeyState.value.isLoading
 
                 Button(
                     onClick = {
-                        signInViewModel.signIn(
-                            body = SignInRequest(
+                        signInViewModel.loginByEmail(
+                            body = LoginByEmailRequest(
                                 email = email,
                                 secret = "0 $password",
                                 deviceId = deviceId
@@ -176,28 +178,41 @@ fun SignInScreen() {
 
 @Composable
 private fun ObserveAuthViewModel(signInViewModel: SignInViewModel) {
-    ObserveSignInResponse(signInViewModel)
-    ObserveSecurityResponse(signInViewModel)
-}
+    val signInResponse = signInViewModel.loginState.value
+    val securityResponse = signInViewModel.publicKeyState.value
 
-@Composable
-private fun ObserveSignInResponse(signInViewModel: SignInViewModel) {
-    val signInResponse = signInViewModel.signInResponseState.value
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
 
-    if (signInResponse.hasError) {
+    if (signInResponse.hasError || securityResponse.hasError) {
         AminoAlertDialog(
             onDismiss = {
-                signInViewModel.clearSignIn()
+                signInViewModel.clearLogin()
+                signInViewModel.clearPublicKey()
             },
             onConfirm = if (signInResponse.code == 270) ({
                 signInResponse.errorBody?.let {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.url))
                     context.startActivity(intent)
                 }
-            }) else ({ signInViewModel.clearSignIn() }),
+            }) else ({
+                signInResponse.extras?.let {
+                    if (it.isNotEmpty() && signInResponse.code == -2) {
+                        (it[0] as Exception).message?.let { errorMsg ->
+                            clipboardManager.setText(
+                                AnnotatedString(errorMsg)
+                            )
+                        }
+                    }
+                }
+
+                signInViewModel.clearLogin()
+                signInViewModel.clearPublicKey()
+            }),
             text = {
-                Text(text = signInResponse.errorMessage!!)
+                Text(
+                    text = signInResponse.errorMessage ?: securityResponse.errorMessage!!
+                )
             },
             okButtonText = {
                 Text(text = stringResource(id = R.string.ok))
@@ -218,38 +233,32 @@ private fun ObserveSignInResponse(signInViewModel: SignInViewModel) {
         )
 
         signInViewModel.sendPublicCertificates(
-            SendPublicCertificatesRequest(
-                certificates = KeyStoreUtility(
+            SendPublicKeyRequest(
+                keyChain = KeyStoreUtility(
                     AminoApplication.getCertificateName()
-                ).initKeyPair().getCertificates(),
+                ).initKeyPair().getChain(),
                 uid = signInResponse.data.userProfile.uid
             )
         )
 
-        signInViewModel.clearSignIn()
+        signInViewModel.clearLogin()
     }
-}
-
-@Composable
-private fun ObserveSecurityResponse(signInViewModel: SignInViewModel) {
-    val context = LocalContext.current
-    val securityResponse = signInViewModel.securityResponseState.value
 
     if (securityResponse.hasError) {
         val message = securityResponse.errorMessage
         val code = securityResponse.code
 
-        Log.d(
+        Log.e(
             "SignInScreen",
-            "Public certificates error: $message ($code)"
+            "Public certificates error: $message ($code) ($securityResponse)"
         )
 
-        signInViewModel.clearSecurity()
+        SessionUtility.deleteSession()
     } else if (!securityResponse.isLoading && securityResponse.code == 0) {
         val intent = Intent(context, HomeActivity::class.java)
         context.startActivity(intent)
         (context as Activity).finish()
 
-        signInViewModel.clearSecurity()
+        signInViewModel.clearPublicKey()
     }
 }

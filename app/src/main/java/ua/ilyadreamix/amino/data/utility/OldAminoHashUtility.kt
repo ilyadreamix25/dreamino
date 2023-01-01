@@ -1,4 +1,4 @@
-package ua.ilyadreamix.amino.http.utility
+package ua.ilyadreamix.amino.data.utility
 
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.codec.binary.Hex

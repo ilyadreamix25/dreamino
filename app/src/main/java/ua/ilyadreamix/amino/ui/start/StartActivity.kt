@@ -36,7 +36,7 @@ class StartActivity : ComponentActivity() {
         }
     }
 
-    private fun login(authStatus: Int) {
+    private fun login(authStatus: SessionStatus) {
         when (authStatus) {
             SessionStatus.NOT_AUTHORIZED -> {
                 val intent = Intent(

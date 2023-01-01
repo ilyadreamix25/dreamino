@@ -14,8 +14,8 @@ import io.ktor.http.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import ua.ilyadreamix.amino.http.utility.NewAminoHashUtility
-import ua.ilyadreamix.amino.http.utility.OldAminoHashUtility
+import ua.ilyadreamix.amino.data.utility.NewAminoHashUtility
+import ua.ilyadreamix.amino.data.utility.OldAminoHashUtility
 import ua.ilyadreamix.amino.data.utility.BodyUtility
 import ua.ilyadreamix.amino.utility.session.SessionUtility
 
@@ -28,8 +28,9 @@ object AminoModule {
             // Base URL
             url(ApiUrls.NARVII_SERVICE_URL)
 
-            // Auth headers
+            // Auth and agent headers
             headers {
+                append(HttpHeaders.UserAgent, OldAminoHashUtility.generateUserAgent())
                 SessionUtility.getSessionInfo()?.let {
                     append(Headers.DEVICE_ID_HEADER, it.deviceId)
                     append(Headers.SID_HEADER, "sid=${it.sessionId}")
@@ -39,7 +40,7 @@ object AminoModule {
 
         install(Logging) {
             logger = Logger.ANDROID
-            level = LogLevel.HEADERS
+            level = LogLevel.ALL
             filter { request ->
                 request.method == HttpMethod.Post
             }
@@ -70,11 +71,11 @@ object AminoModule {
             }
         }
 
-    private object ApiUrls {
+    object ApiUrls {
         const val NARVII_SERVICE_URL = "https://service.narvii.com/api/v1/"
     }
 
-    private object Headers {
+    object Headers {
         const val NEW_SIGNATURE_HEADER = "NDC-MESSAGE-SIGNATURE"
         const val OLD_SIGNATURE_HEADER = "NDC-MSG-SIG"
         const val DEVICE_ID_HEADER = "NDCDEVICEID"
