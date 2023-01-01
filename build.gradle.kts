@@ -17,6 +17,9 @@ buildscript {
         set("retrofitVersion", "2.9.0")
         set("coilVersion", "2.2.2")
 
+        set("ktorVersion", "2.2.1")
+        set("serializationVersion", "1.4.1")
+
         // DI
         set("daggerHiltVersion", "2.44.2")
 
@@ -34,4 +37,5 @@ plugins {
     id("com.android.application")      version "7.3.1"  apply false
     id("com.android.library")          version "7.3.1"  apply false
     id("org.jetbrains.kotlin.android") version "1.7.10" apply false
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10" apply false
 }

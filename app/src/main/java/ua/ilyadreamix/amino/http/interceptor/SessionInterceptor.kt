@@ -1,7 +1,7 @@
 package ua.ilyadreamix.amino.http.interceptor
 
 import okhttp3.*
-import ua.ilyadreamix.amino.session.SessionUtility
+import ua.ilyadreamix.amino.utility.session.SessionUtility
 
 class SessionInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

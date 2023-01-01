@@ -8,4 +8,8 @@
     <string name="dreamino_by">IlyaDreamix 2022\nVersion %1$s</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="chats">Chats</string>
+    <string name="communities">Communities</string>
+    <string name="profile">Profile</string>
+    <string name="several_error">Several error! Please report it to the developer</string>
 </resources>

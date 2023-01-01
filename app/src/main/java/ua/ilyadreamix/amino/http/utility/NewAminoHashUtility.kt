@@ -3,7 +3,6 @@ package ua.ilyadreamix.amino.http.utility
 import org.apache.commons.codec.binary.Base64
 import ua.ilyadreamix.amino.AminoApplication
 import ua.ilyadreamix.amino.http.hash.KeyStoreUtility
-import ua.ilyadreamix.amino.session.SessionUtility
 import java.security.Signature
 
 object NewAminoHashUtility {

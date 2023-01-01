@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 val composeVersion: String by rootProject.extra
@@ -51,7 +52,7 @@ android {
 
     packagingOptions {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/*"
         }
     }
 
@@ -76,6 +77,9 @@ val gsonVersion: String by rootProject.extra
 val retrofitVersion: String by rootProject.extra
 val coilVersion: String by rootProject.extra
 
+val ktorVersion: String by rootProject.extra
+val serializationVersion: String by rootProject.extra
+
 val daggerHiltVersion: String by rootProject.extra
 
 val commonsCodecVersion: String by rootProject.extra
@@ -83,10 +87,10 @@ val commonsLangVersion: String by rootProject.extra
 
 dependencies {
     // UI
-    implementation(platform("androidx.compose:compose-bom:${composeBomVersion}"))
-    implementation("androidx.activity:activity-compose:${composeActivityVersion}")
-    implementation("androidx.constraintlayout:constraintlayout-compose:${composeConstraintLayoutVersion}")
-    implementation("com.valentinilk.shimmer:compose-shimmer:${shimmerVersion}")
+    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    implementation("androidx.activity:activity-compose:$composeActivityVersion")
+    implementation("androidx.constraintlayout:constraintlayout-compose:$composeConstraintLayoutVersion")
+    implementation("com.valentinilk.shimmer:compose-shimmer:$shimmerVersion")
 
     // Compose BOM dependencies
     implementation("androidx.compose.ui:ui")
@@ -95,23 +99,35 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
 
     // Coroutines, async, etc.
-    implementation("androidx.core:core-ktx:${coreKtxVersion}")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${lifecycleRuntimeKtxVersion}")
-    implementation("androidx.navigation:navigation-compose:${composeNavVersion}")
+    implementation("androidx.core:core-ktx:$coreKtxVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeKtxVersion")
+    implementation("androidx.navigation:navigation-compose:$composeNavVersion")
 
     // HTTP
-    implementation("com.google.code.gson:gson:${gsonVersion}")
-    implementation("com.squareup.retrofit2:retrofit:${retrofitVersion}")
-    implementation("com.squareup.retrofit2:converter-gson:${retrofitVersion}")
-    implementation("io.coil-kt:coil-compose:${coilVersion}")
+    implementation("com.google.code.gson:gson:$gsonVersion")
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation("io.coil-kt:coil-compose:$coilVersion")
+
+    // New HTTP
+    implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
+    implementation("io.ktor:ktor-client-android")
+    implementation("io.ktor:ktor-client-serialization-jvm")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("io.ktor:ktor-client-core-jvm")
+    implementation("io.ktor:ktor-client-logging-jvm")
+    implementation("io.ktor:ktor-client-json-jvm")
+    implementation("io.ktor:ktor-client-content-negotiation")
+    implementation("org.slf4j:slf4j-simple:2.0.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     // Dagger Hilt
-    implementation("com.google.dagger:hilt-android:${daggerHiltVersion}")
-    kapt("com.google.dagger:hilt-compiler:${daggerHiltVersion}")
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$daggerHiltVersion")
 
     // Hash utilities
-    implementation("commons-codec:commons-codec:${commonsCodecVersion}")
-    implementation("org.apache.commons:commons-lang3:${commonsLangVersion}")
+    implementation("commons-codec:commons-codec:$commonsCodecVersion")
+    implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
 
     // Previews
     debugImplementation("androidx.compose.ui:ui-tooling")

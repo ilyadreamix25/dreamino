@@ -5,7 +5,11 @@
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
     <string name="login">Войти</string>
-    <string name="dreamino_by">IlyaDreamix 2022\Версия %1$s</string>
+    <string name="dreamino_by">IlyaDreamix 2022\nВерсия %1$s</string>
     <string name="ok">ОК</string>
     <string name="cancel">Отмена</string>
+    <string name="chats">Чаты</string>
+    <string name="communities">Сообщества</string>
+    <string name="profile">Профиль</string>
+    <string name="several_error">Серьёзная ошибка! Пожалуйста, сообщите о ней разработчику</string>
 </resources>

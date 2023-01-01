@@ -10,3 +10,4 @@ data class SendPublicCertificatesRequest(
     @SerializedName("timestamp")
     val timestamp: Long = System.currentTimeMillis()
 )
+

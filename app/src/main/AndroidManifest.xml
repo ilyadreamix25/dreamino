@@ -17,7 +17,7 @@
         android:fullBackupContent="@xml/backup_rules">
 
         <activity
-            android:name=".start.StartActivity"
+            android:name=".ui.start.StartActivity"
             android:exported="true">
 
             <intent-filter>
@@ -27,8 +27,8 @@
 
         </activity>
 
-        <activity android:name=".home.HomeActivity" />
-        <activity android:name=".auth.SignInActivity" />
+        <activity android:name=".ui.home.HomeActivity" />
+        <activity android:name=".ui.auth.SignInActivity" />
 
     </application>
 

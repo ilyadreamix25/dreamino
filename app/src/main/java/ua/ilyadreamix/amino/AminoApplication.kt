@@ -4,7 +4,7 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 import ua.ilyadreamix.amino.http.hash.KeyStoreUtility
 import ua.ilyadreamix.amino.http.utility.NewAminoHashUtility
-import ua.ilyadreamix.amino.session.SessionUtility
+import ua.ilyadreamix.amino.utility.session.SessionUtility
 
 @HiltAndroidApp
 class AminoApplication : Application() {
