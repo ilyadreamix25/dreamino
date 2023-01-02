@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 
 @Stable private val DarkColors = darkColorScheme(
@@ -50,7 +51,6 @@ fun AminoTheme(content: @Composable () -> Unit) {
                 }
 
             WindowCompat.setDecorFitsSystemWindows(window, false)
-
             WindowCompat.getInsetsController(window, view)
                 .apply {
                     isAppearanceLightNavigationBars = !setDarkTheme

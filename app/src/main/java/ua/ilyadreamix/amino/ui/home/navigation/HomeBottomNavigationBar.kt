@@ -26,7 +26,6 @@ fun HomeBottomAppBar(
 
     BottomAppBar(modifier = modifier) {
         HomeNavigationScreen.asList().forEach { screen ->
-
             val selected =
                 currentScreen == screen
 

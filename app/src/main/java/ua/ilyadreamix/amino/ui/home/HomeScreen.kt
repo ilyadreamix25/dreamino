@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import ua.ilyadreamix.amino.ui.core.component.AminoTopAppBar
 import ua.ilyadreamix.amino.ui.home.navigation.HomeBottomAppBar
 import ua.ilyadreamix.amino.ui.home.navigation.HomeNavigationHost
 import ua.ilyadreamix.amino.ui.home.navigation.HomeNavigationScreen
@@ -38,11 +40,10 @@ fun HomeScreen() {
         Scaffold(
             bottomBar = { HomeBottomAppBar(navHostController = navController) },
             topBar = {
-
                 val isHomeScreen =
                     currentScreen.route == HomeNavigationScreen.Communities.route
 
-                HomeTopBar(
+                AminoTopAppBar(
                     title = currentScreen.title,
                     navigationIcon =
                         if (!isHomeScreen) ({
@@ -50,7 +51,10 @@ fun HomeScreen() {
                                 onClick = {
                                     navController.navigate(
                                         HomeNavigationScreen.Communities.route
-                                    )
+                                    ) {
+                                        popUpTo(navController.graph.findStartDestination().id)
+                                        launchSingleTop = true
+                                    }
                                 }
                             ) {
                                 // BUG: Icon padding is too small

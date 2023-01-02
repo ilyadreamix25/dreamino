@@ -24,17 +24,19 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
+import ua.ilyadreamix.amino.utility.coil.getGifImageLoader
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommunityCard(
+fun CommunityItem(
     iconUrl: String,
     coverUrl: String,
     name: String,
     shimmerInstance: Shimmer,
     modifier: Modifier = Modifier,
     iconBorderColor: Color = MaterialTheme.colorScheme.primary,
+    onClick: () -> Unit = {}
 ) {
-
     var loadingIcon by remember {
         mutableStateOf(true)
     }
@@ -65,7 +67,8 @@ fun CommunityCard(
                 4.dp,
                 4.dp,
                 4.dp
-            )
+            ),
+            onClick = onClick
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
@@ -78,7 +81,8 @@ fun CommunityCard(
                     onSuccess = {
                         loadingCover = false
                     },
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    imageLoader = getGifImageLoader()
                 )
                 Text(
                     text = name,
@@ -124,7 +128,8 @@ fun CommunityCard(
                 .background(iconBorderColor),
             onSuccess = {
                 loadingIcon = false
-            }
+            },
+            imageLoader = getGifImageLoader()
         )
     }
 }

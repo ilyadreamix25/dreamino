@@ -1,5 +1,6 @@
 package ua.ilyadreamix.amino.ui.home.community
 
+import android.content.Intent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,17 +13,21 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
+import ua.ilyadreamix.amino.ui.community.CommunityActivity
 
 @Composable
 fun CommunitiesScreen() {
     val communitiesViewModel = viewModel<CommunitiesViewModel>()
     val communitiesState = rememberLazyGridState()
+
+    val context = LocalContext.current
 
     if (communitiesViewModel.joinedState.value.code == -1)
         communitiesViewModel.getJoinedCommunities()
@@ -33,7 +38,6 @@ fun CommunitiesScreen() {
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             if (it)
-                // Loading animation
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -47,7 +51,7 @@ fun CommunitiesScreen() {
                     ) {
                         items(communities, key = { item -> item.hashCode() }) { community ->
                             community.mediaList?.let { mediaList ->
-                                CommunityCard(
+                                CommunityItem(
                                     iconUrl = community.icon
                                         .replace("http", "https"),
                                     coverUrl = mediaList[0]
@@ -56,7 +60,12 @@ fun CommunitiesScreen() {
                                         .content
                                         .replace("http", "https"),
                                     name = community.name,
-                                    shimmerInstance = shimmer
+                                    shimmerInstance = shimmer,
+                                    onClick = {
+                                        val intent = Intent(context, CommunityActivity::class.java)
+                                        intent.putExtra("ndcId", community.ndcId)
+                                        context.startActivity(intent)
+                                    }
                                 )
                             }
                         }

@@ -12,4 +12,7 @@
     <string name="communities">Communities</string>
     <string name="profile">Profile</string>
     <string name="several_error">Several error! Please report it to the developer</string>
+    <string name="featured">Featured</string>
+    <string name="latest">Latest</string>
+    <string name="empty_content">Empty content</string>
 </resources>

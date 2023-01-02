@@ -13,6 +13,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import ua.ilyadreamix.amino.data.utility.NewAminoHashUtility
 import ua.ilyadreamix.amino.data.utility.OldAminoHashUtility
@@ -22,6 +23,7 @@ import ua.ilyadreamix.amino.utility.session.SessionUtility
 @Module
 @InstallIn(SingletonComponent::class)
 object AminoModule {
+    @OptIn(ExperimentalSerializationApi::class)
     @Provides
     fun getClient() = HttpClient(Android) {
         defaultRequest {
@@ -41,15 +43,14 @@ object AminoModule {
         install(Logging) {
             logger = Logger.ANDROID
             level = LogLevel.ALL
-            filter { request ->
-                request.method == HttpMethod.Post
-            }
         }
 
         install(ContentNegotiation) {
             json(
                 Json {
                     ignoreUnknownKeys = true
+                    coerceInputValues = false
+                    explicitNulls = false
                 }
             )
         }

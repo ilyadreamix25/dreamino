@@ -28,5 +28,9 @@
         <activity android:name=".ui.home.HomeActivity" />
         <activity android:name=".ui.auth.SignInActivity" />
 
+        <activity
+            android:name=".ui.community.CommunityActivity"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 </manifest>

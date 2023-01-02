@@ -12,4 +12,7 @@
     <string name="communities">Сообщества</string>
     <string name="profile">Профиль</string>
     <string name="several_error">Серьёзная ошибка! Пожалуйста, сообщите о ней разработчику</string>
+    <string name="featured">Подборка</string>
+    <string name="latest">Последние</string>
+    <string name="empty_content">Пустой пост</string>
 </resources>

@@ -88,6 +88,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:$composeActivityVersion")
     implementation("androidx.constraintlayout:constraintlayout-compose:$composeConstraintLayoutVersion")
     implementation("com.valentinilk.shimmer:compose-shimmer:$shimmerVersion")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.28.0")
 
     // Compose BOM dependencies
     implementation("androidx.compose.ui:ui")
@@ -101,6 +102,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$composeNavVersion")
 
     // HTTP
+    implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
     implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
     implementation("io.ktor:ktor-client-android")

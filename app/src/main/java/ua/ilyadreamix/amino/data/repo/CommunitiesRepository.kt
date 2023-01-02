@@ -15,4 +15,16 @@ object CommunitiesRepository {
             parameter("size", size)
             parameter("v", v)
         }
+
+    suspend fun getCommunityInfo(
+        ndcId: Int,
+        withInfluencerList: Int = 1,
+        withTopicList: Boolean = true,
+        influencerListOrderStrategy: String = "fansCount"
+    ): HttpResponse = AminoModule.getClient()
+        .get("g/s-x${ndcId}/community/info") {
+            parameter("withInfluencerList", withInfluencerList)
+            parameter("withTopicList", withTopicList)
+            parameter("influencerListOrderStrategy", influencerListOrderStrategy)
+        }
 }

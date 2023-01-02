@@ -30,12 +30,12 @@ class CommunitiesViewModel : ViewModel() {
                         code = body.statusCode
                     )
                 } else {
-                    val responseBody: BaseResponse = response.body()
+                    val body: BaseResponse = response.body()
                     _joinedState.value = ApiState(
-                        errorBody = responseBody,
-                        code = responseBody.statusCode,
+                        errorBody = body,
+                        code = body.statusCode,
                         hasError = true,
-                        errorMessage = responseBody.message
+                        errorMessage = body.message
                     )
                 }
             } catch (e: Exception) {
