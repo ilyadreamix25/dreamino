@@ -1,4 +1,4 @@
-package ua.ilyadreamix.amino.ui.home.community
+package ua.ilyadreamix.amino.ui.home.communities
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

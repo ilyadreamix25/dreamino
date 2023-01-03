@@ -15,4 +15,7 @@
     <string name="featured">Featured</string>
     <string name="latest">Latest</string>
     <string name="empty_content">Empty content</string>
+    <string name="content_type_unsupported">This content is not supported\n
+        Please update the app to the last version
+    </string>
 </resources>

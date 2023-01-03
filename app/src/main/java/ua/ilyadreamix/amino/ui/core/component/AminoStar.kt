@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun BoxScope.AminoPin() {
+fun BoxScope.AminoStar() {
     Text(
-        text = "📌",
+        text = "★",
         fontSize = 20.sp,
         lineHeight = 21.sp,
         maxLines = 2,
@@ -28,7 +28,7 @@ fun BoxScope.AminoPin() {
             shadow = Shadow(
                 color = Color.Black.copy(alpha = .75f),
                 offset = Offset(0f, 0f),
-                blurRadius = 5f
+                blurRadius = 8f
             ),
             color = Color.White
         ),

@@ -15,4 +15,7 @@
     <string name="featured">Подборка</string>
     <string name="latest">Последние</string>
     <string name="empty_content">Пустой пост</string>
+    <string name="content_type_unsupported">Этот контент не поддерживается\n
+        Пожалуйста, обновите приложение до последней версии
+    </string>
 </resources>

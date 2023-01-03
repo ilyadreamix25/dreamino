@@ -92,9 +92,21 @@ fun ObserveCommunity(
         mutableStateOf(1)
     }
 
-    isCommunityTopBarVisible = (
-        remember { derivedStateOf { listState.firstVisibleItemIndex } }.value == 0
-    )
+    viewModel.featuredState.value.data?.featuredList?.let { featuredList ->
+        val featuredListWithoutPinned = featuredList.filter {
+            featured -> featured.featuredType == 1
+        }
+        if (featuredListWithoutPinned.isNotEmpty()) {
+            val firstFeatured = featuredList.indexOf(
+                featuredListWithoutPinned[0]
+            )
+
+            isCommunityTopBarVisible = (
+                remember { derivedStateOf { listState.firstVisibleItemIndex } }
+                    .value <= firstFeatured
+                )
+        }
+    }
 
     if (viewModel.communityState.value.code == -1) {
         viewModel.getCommunityInfo(ndcId)
@@ -111,21 +123,19 @@ fun ObserveCommunity(
                 AnimatedVisibility(isCommunityTopBarVisible) {
                     AminoTopAppBar(
                         title = {
-                            Column {
-                                Crossfade(
-                                    targetState = communityState == null,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Box(modifier = Modifier.fillMaxWidth()) {
-                                        if (it) Box(Modifier)
-                                        else Text(
-                                            text = communityState!!.community.name,
-                                            modifier = Modifier.align(Alignment.Center),
-                                            maxLines = 1,
-                                            fontSize = 18.sp,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                    }
+                            Crossfade(
+                                targetState = communityState == null,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Box(modifier = Modifier.fillMaxWidth()) {
+                                    if (it) Spacer(modifier = Modifier.fillMaxWidth())
+                                    else Text(
+                                        text = communityState!!.community.name,
+                                        modifier = Modifier.align(Alignment.Center),
+                                        maxLines = 1,
+                                        fontSize = 18.sp,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
                                 }
                             }
                         },
@@ -205,7 +215,7 @@ fun ObserveCommunity(
     ) {
         Crossfade(
             targetState =
-                viewModel.communityState.value.isLoading &&
+                viewModel.communityState.value.isLoading ||
                 viewModel.featuredState.value.isLoading,
             modifier = Modifier
                 .fillMaxSize()

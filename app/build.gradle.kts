@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdk    = 24
         targetSdk = 33
-        versionCode = 3
-        versionName = "0.0.03"
+        versionCode = 5
+        versionName = "0.0.04"
         applicationId = "ua.ilyadreamix.amino"
 
         vectorDrawables {
@@ -95,6 +95,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material:material")
 
     // Coroutines, async, etc.
     implementation("androidx.core:core-ktx:$coreKtxVersion")

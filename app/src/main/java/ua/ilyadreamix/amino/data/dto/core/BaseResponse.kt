@@ -10,5 +10,7 @@ open class BaseResponse(
     @SerialName("api:message")
     val message: String = "Unable to make an request",
     @SerialName("url")
-    val url: String? = null
+    val url: String? = null,
+    @SerialName("api:timestamp")
+    val timestamp: String = "0",
 )

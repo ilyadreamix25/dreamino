@@ -1,5 +1,6 @@
-package ua.ilyadreamix.amino.ui.home.community
+package ua.ilyadreamix.amino.ui.post
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,31 +8,33 @@ import androidx.lifecycle.viewModelScope
 import io.ktor.client.call.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
-import ua.ilyadreamix.amino.data.dto.communities.JoinedCommunitiesResponse
 import ua.ilyadreamix.amino.data.dto.core.ApiState
 import ua.ilyadreamix.amino.data.dto.core.BaseResponse
-import ua.ilyadreamix.amino.data.repo.CommunitiesRepository
+import ua.ilyadreamix.amino.data.dto.posts.BlogInfoResponse
+import ua.ilyadreamix.amino.data.repo.BlogRepository
 
-class CommunitiesViewModel : ViewModel() {
-    private var _joinedState = mutableStateOf(ApiState<JoinedCommunitiesResponse>())
-    val joinedState: State<ApiState<JoinedCommunitiesResponse>> = _joinedState
+class PostViewModel : ViewModel() {
+    private var _blogState = mutableStateOf(ApiState<BlogInfoResponse>())
+    val blogState: State<ApiState<BlogInfoResponse>> = _blogState
 
-    fun getJoinedCommunities() {
+    fun getBlogInfo(ndcId: Int, blogId: String) {
         viewModelScope.launch {
+            _blogState.value = ApiState(isLoading = true)
+
+            val response = BlogRepository.getBlogInfo(ndcId, blogId)
+
             try {
-                _joinedState.value = ApiState(isLoading = true)
-
-                val response = CommunitiesRepository.getJoinedCommunities()
-
                 if (response.status == HttpStatusCode.OK) {
-                    val body: JoinedCommunitiesResponse = response.body()
-                    _joinedState.value = ApiState(
+                    val body: BlogInfoResponse = response.body()
+                    _blogState.value = ApiState(
                         data = body,
                         code = body.statusCode
                     )
+
+                    Log.d("TS", body.timestamp)
                 } else {
                     val body: BaseResponse = response.body()
-                    _joinedState.value = ApiState(
+                    _blogState.value = ApiState(
                         errorBody = body,
                         code = body.statusCode,
                         hasError = true,
@@ -39,7 +42,8 @@ class CommunitiesViewModel : ViewModel() {
                     )
                 }
             } catch (e: Exception) {
-                _joinedState.value = ApiState(
+                Log.e("PostViewModel", "getBlogInfo: Several error", e)
+                _blogState.value = ApiState(
                     code = -2,
                     hasError = true,
                     errorMessage = "Several error",

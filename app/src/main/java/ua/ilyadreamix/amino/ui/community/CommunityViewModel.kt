@@ -56,7 +56,7 @@ class CommunityViewModel : ViewModel() {
         }
     }
 
-    fun getFeaturedBlogs(ndcId: Int) {
+    fun getFeaturedBlogs(ndcId: Int, onEnd: () -> Unit = {}) {
         viewModelScope.launch {
             _featuredState.value = ApiState(isLoading = true)
 
@@ -87,6 +87,8 @@ class CommunityViewModel : ViewModel() {
                     extras = listOf(e)
                 )
             }
+
+            onEnd()
         }
     }
 }
